@@ -10,6 +10,29 @@ export default class extends Component {
     this.gridColumnApi = params.columnApi;
 
     params.api.sizeColumnsToFit();
+    params.api.forEachNode((node) => {
+      if (node.data) {
+        if (this.props.selectedRows.indexOf(node.data.index) !== -1) {
+          node.setSelected(true);
+        }
+      }
+    });
+  }
+
+  onModelUpdated(params) {
+    // params.api.forEachNode((node) => {
+    //   if (node.data) {
+    //     console.log('>> ]] ', this.props.selectedRows, this.props.selectedRows.indexOf(node.data.index));
+    //     if (this.props.selectedRows.indexOf(node.data.index) !== -1) {
+    //       node.setSelected(true);
+    //     }
+    //   }
+    // });
+  }
+
+  onSelectionChanged(params) {
+    console.log('People:onSelectionChanged', this.props, this.state);
+    this.props.onChange(params.api.getSelectedRows());
   }
 
   // getRowData() {
@@ -38,7 +61,7 @@ export default class extends Component {
   // }
 
   render() {
-    console.log('People:render', this.props);
+    console.log('People:render', this.props, this.state);
     return (
       <div style={{ width: '100%', height: '100%' }}>
         <div style={{ height: '100%', boxSizing: 'border-box' }}>
@@ -66,6 +89,8 @@ export default class extends Component {
               autoGroupColumnDef={this.props.autoGroupColumnDef}
               onGridReady={this.props.onGridReady}
               onGridReady={this.onGridReady.bind(this)}
+              onModelUpdated={this.onModelUpdated.bind(this)}
+              onSelectionChanged={this.onSelectionChanged.bind(this)}
             />
           </div>
         </div>

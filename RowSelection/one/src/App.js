@@ -34,8 +34,9 @@ function poundFormatter(params) {
   );
 }
 
-function createNewRowData(category) {
+function createNewRowData(category, index) {
   const newData = {
+    index,
     category,
     model: models[Math.floor(Math.random() * models.length)],
     price: Math.floor(Math.random() * 800000) + 20000,
@@ -51,7 +52,7 @@ function getInitialRowData() {
   const rowData = [];
   for (let i = 0; i < 12; i++) {
     const category = categories[i % categories.length];
-    rowData.push(createNewRowData(category));
+    rowData.push(createNewRowData(category, i));
   }
   return rowData;
 }
@@ -108,23 +109,39 @@ const props = {
 };
 
 export default class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      selectedRows: [],
+    };
+  }
+
   render() {
     return (
       <div className="App">
         <Tabs>
           <TabList>
             <Tab>
-                    Person
+Person
             </Tab>
             <Tab>
-                    Places
+Places
             </Tab>
           </TabList>
           <TabPanel>
             <h2>
 Person
             </h2>
-            <People {...props} />
+            <People
+              {...props}
+              selectedRows={this.state.selectedRows}
+              onChange={(selectedRows) => {
+                console.log('People:onChange', selectedRows);
+                this.setState({
+                  selectedRows: selectedRows.map(o => o.index),
+                });
+              }}
+            />
           </TabPanel>
           <TabPanel>
             <h2>
